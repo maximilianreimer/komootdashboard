@@ -30,6 +30,8 @@ tours_df["weekday"] = tours_df["date"].dt.day_name()
 
 
 tours_df = tours_df[tours_df["date"] > pd.Timestamp("2024-01-01", tzinfo=pytz.timezone("Europe/Berlin"))]
+tours_df.sort_values(by="date", ascending=True, inplace=True)
+tours_df["#"] = range(1, len(tours_df) + 1)
 
 # create a scatter plot showing distance vs. time and the color should encode the date
 scatter = px.scatter(tours_df,
@@ -40,7 +42,10 @@ scatter = px.scatter(tours_df,
     color="pace",
     color_continuous_scale="ylorrd_r",
     size="pace",
-
+    text="#",
+)
+scatter.update_layout(
+    font=dict(family="Arial", size=10, color="black"),
 )
 
 line = px.line(tours_df, x="date", y="distance[km]", symbol="weekday", color="pace", markers=True)
