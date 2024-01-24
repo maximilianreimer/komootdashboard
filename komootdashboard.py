@@ -25,7 +25,7 @@ tours_df["duration[m]"] = tours_df["duration"].dt.total_seconds() / 60
 tours_df["distance[km]"] = tours_df["distance"] / 1000
 tours_df["time_in_motion"] = pd.to_timedelta(tours_df["time_in_motion"], unit="s")
 tours_df["pace"] = tours_df["duration[m]"] / tours_df["distance[km]"] # may use time delta here and format ticks
-tours_df["weekday"] = tours_df["date"].dt.day_name(locale="de_DE")
+tours_df["weekday"] = tours_df["date"].dt.day_name()
 
 
 
