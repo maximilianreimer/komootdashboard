@@ -36,16 +36,52 @@ tours_df["#"] = range(1, len(tours_df) + 1)
 # create a scatter plot showing distance vs. time and the color should encode the date
 scatter = px.scatter(tours_df,
     x="distance[km]",
-    y="duration[m]",
+    y="pace",
     #symbol="sport",
     hover_data=["distance[km]", "duration[m]", "pace", "sport", "name", "date", "weekday"],
-    color="pace",
     color_continuous_scale="ylorrd_r",
-    size="pace",
+    color="#",
     text="#",
+    #size=10
 )
 scatter.update_layout(
     font=dict(family="Arial", size=10, color="black"),
+)
+
+
+scatter = go.Figure()
+scatter.add_trace(
+    go.Scatter(
+        x=tours_df["distance[km]"],
+        y=tours_df["pace"],
+        mode="markers+text",
+        #marker=dict(color=tours_df["date"],
+        marker=dict(
+            size=20,
+            color=tours_df["#"],
+            colorscale="ylorrd",
+            #symbols=tours_df["weekday"],
+        ),
+        text=tours_df["#"],
+        textfont=dict(color="black"),
+        hoverinfo="text",
+        name="Runs"
+    ),
+
+)
+scatter.add_trace(go.Scatter(
+    x=[21],
+    y=[5],
+    mode="markers",
+    marker=dict(size=20, color="black", symbol="x"),
+    name="Target"
+) )
+scatter.add_hline(y=5, line_color="grey", line_width=1, line_dash="dash")
+scatter.add_vline(x=21, line_color="grey", line_width=1, line_dash="dash")
+scatter.update_layout(
+    xaxis=dict(title="Distance [km]"),
+    yaxis=dict(title="Pace [min/km]", autorange="reversed"),
+showlegend=True
 )
 
 line = px.line(tours_df, x="date", y="distance[km]", symbol="weekday", color="pace", markers=True)
@@ -57,12 +93,18 @@ line = px.line(tours_df, x="date", y="distance[km]", symbol="weekday", color="pa
 #        color=tours_df["pace"],
 #        size=tours_df["pace"],
 #    )
-#)
-col1, col2 = st.columns([1, 1])
 
+line = go.Figure()
+line.add_trace(
+    go.Scatter(
+        x=tours_df["date"],
+        y=tours_df["distance[km]"],
 
-col1.subheader("Runs: time vs distance")
-col1.plotly_chart(scatter, use_container_width=True)
+    )
+)
 
-col2.subheader("Runs over time")
-col2.plotly_chart(line, use_container_width=True)
+st.subheader("Runs: time vs distance")
+st.plotly_chart(scatter, use_container_width=True)
+st.plotly_chart(line, use_container_width=True)
+#col2.subheader("Runs over time")
+#col2.plotly_chart(line, use_container_width=True)
